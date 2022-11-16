@@ -1,26 +1,27 @@
-# Large Tether Transfer Agent
+# Uniswap Swap Detection Bot
 
 ## Description
 
-This agent detects transactions with large Tether transfers
+This bot detects any swaps made on the Uniswap protocol
 
 ## Supported Chains
 
 - Ethereum
-- List any other chains this agent can support e.g. BSC
 
 ## Alerts
 
-Describe each of the type of alerts fired by this agent
-
-- FORTA-1
-  - Fired when a transaction contains a Tether transfer over 10,000 USDT
-  - Severity is always set to "low" (mention any conditions where it could be something else)
-  - Type is always set to "info" (mention any conditions where it could be something else)
-  - Mention any other type of metadata fields included with this alert
+- UNISWAP-SWAP-1
+  - Fired when a transaction contains swap made on the Uniswap protocol
+  - Severity is always set to "Info"
+  - Type is always set to "info"
+  - Metadata:
+    - pool: address of the liquidity pool of the two tokens
+    - token0: address of the first token
+    - token1: address of the second token
+    - fee: fee of the liquidity pool
 
 ## Test Data
 
-The agent behaviour can be verified with the following transactions:
+The bot behaviour can be verified with the following transactions:
 
-- 0x3a0f757030beec55c22cbc545dd8a844cbbb2e6019461769e1bc3f3a95d10826 (15,000 USDT)
+- Transaction: 0x7e0c12d94158c861e2f403176b2f9b6308fc831a963fa2cfa07064714ae49e1c

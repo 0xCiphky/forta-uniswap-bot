@@ -1,17 +1,8 @@
 import { providers } from "ethers";
-import {
-  Finding,
-  HandleTransaction,
-  TransactionEvent,
-  getEthersProvider,
-} from "forta-agent";
-const { createFinding } = require("./finding");
-const { IUNISWAPV3POOL, SWAP_EVENT } = require("./constants");
-const {
-  getPoolValues,
-  getFactoryContract,
-  getPoolAddress,
-} = require("./helper");
+import { Finding, HandleTransaction, TransactionEvent, getEthersProvider } from "forta-agent";
+import { createFinding } from "./finding";
+import { IUNISWAPV3POOL, SWAP_EVENT } from "./constants";
+import { getPoolValues, getFactoryContract, createTwoAddress } from "./helper";
 
 export function provideHandleTransaction(
   provider: providers.Provider,
@@ -32,17 +23,12 @@ export function provideHandleTransaction(
       try {
         //Call getPoolValues to get the token addresses and fee from the pool contract
         //if this is a valid pool contract it will return the vals
-        const poolVal = await getPoolValues(
-          log.address,
-          IUNISWAPV3POOL,
-          provider,
-          bn
-        );
+        const poolVal = await getPoolValues(log.address, IUNISWAPV3POOL, provider, bn);
 
-        //once we receive the poolVals we use them in the factory contract to get the pool address
+        //once we receive the poolVals we use create2 to get the pool address
         //if the pool address from the event log matches this pool address we have a valid uniswap pool
         //We can then create a finding and push it to our findings array
-        const poolAddress = await getPoolAddress(poolVal, factoryContract, bn);
+        const poolAddress = await createTwoAddress(poolVal, factoryContract);
         if (poolAddress.toLowerCase() === log.address.toLowerCase()) {
           findings.push(createFinding(poolVal, poolAddress));
         }
@@ -55,9 +41,5 @@ export function provideHandleTransaction(
 }
 
 export default {
-  handleTransaction: provideHandleTransaction(
-    getEthersProvider(),
-    SWAP_EVENT,
-    IUNISWAPV3POOL
-  ),
+  handleTransaction: provideHandleTransaction(getEthersProvider(), SWAP_EVENT, IUNISWAPV3POOL),
 };

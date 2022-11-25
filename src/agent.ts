@@ -28,7 +28,7 @@ export function provideHandleTransaction(
         //once we receive the poolVals we use create2 to get the pool address
         //if the pool address from the event log matches this pool address we have a valid uniswap pool
         //We can then create a finding and push it to our findings array
-        const poolAddress = await createTwoAddress(poolVal, factoryContract);
+        const poolAddress = createTwoAddress(poolVal, factoryContract);
         if (poolAddress.toLowerCase() === log.address.toLowerCase()) {
           findings.push(createFinding(poolVal, poolAddress));
         }
